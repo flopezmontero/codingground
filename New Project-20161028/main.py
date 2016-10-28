@@ -17,11 +17,11 @@
 
 import struct
 import string
-#import openpyx1
 import os
 import shutil
 import shelve
-import pyperclip
+#import pyperclip http://coffeeghost.net/2010/10/09/pyperclip-a-cross-platform-clipboard-module-for-python/
+#import openpyx1 #pip install openpyxl
 
 def load_exc(a):#Carga de las hojas de excel
     
@@ -98,8 +98,17 @@ def find_and_list(wb,lista):
     
 def show_test (wb,lista_pos,lista_fila): #muestra el primer elemento de la lista con sus detalles
     sheet = wb.get_sheet_by_name('Hoja1')
-    for i in range(1,sheet.max_column):
-        print("%s: %s",sheet.cell(row=1, column=i).value, sheet.cell(row=lista_fila[0], column=i))
+    if (lista_pos==[]):
+        print("No hay elementos cargados o ya ha finalizado su trabajo ;)")
+    else:
+        for i in range(1,sheet.max_column):
+            print("%s: %s",sheet.cell(row=1, column=i).value, sheet.cell(row=lista_fila[0], column=i).value)
+            if(sheet.cell(row(row=1, column=i).value=="Autocase")):
+                pyperclip.copy(sheet.cell(row=lista_fila[0], column=i).value)
+        print("###########################")
+    return 0
+    
+#def modify_testcase(wb,lista_pos,lista_fila): #añadir la informacion extra
 
 
 def main():
@@ -107,7 +116,7 @@ def main():
     lista_pos=[];
     lista_fila=[];
     lista_col=[];
-    #lista.append()
+    
     oper=0
     typ=0
     n=1024
@@ -117,7 +126,7 @@ def main():
     
     menu = {}
     menu['1']="Almacenar rango de trabajo" 
-    menu['2']="Formato simple/Formato doble"
+    menu['2']="Obtener info de un testcase"
     menu['3']="Crear valores aleatorios en hexadecimal"
     menu['4']="(Postsimulacion) Calcular y graficar error"
     menu['5']="Exit"
@@ -136,7 +145,7 @@ def main():
 	        print
 	    elif selection == '2':
 	        #lista.append(oper)
-	        pyperclip.copy("ola k ase")
+	        #pyperclip.copy("ola k ase")
 	        print
 	    elif selection == '3':
 	        for i in lista:
