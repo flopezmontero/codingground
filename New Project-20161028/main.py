@@ -40,8 +40,8 @@ def load_exc(a):#Carga de las hojas de excel
                         print "Creando copia \n";
                         shutil.copy2(excpath, exccopypath);
 
-                #wb=openpyx1.load_workbook("exampleW.xls");
-                wb=open(exccopypath);
+                wb=openpyxl.load_workbook("exampleW.xlsx");
+                #wb=open(exccopypath);
         else:
                 print "No hay archivo excel para leer";
                 a=False;
@@ -82,10 +82,12 @@ def load():
 def find_and_list(wb,lista):
         name=raw_input("Digite nombre: ")
         n=0;
-        sheet = wb.get_sheet_by_name('Hoja1')
+        #sheet = wb.get_sheet_by_name('Hoja1')
+        sheet = wb.get_sheet_by_name('Sheet1')
         for i in range(2, sheet.max_row+1):
-                if sheet.cell(row=i, column=1).value == name :
-                        lista.append(sheet.cell(row=i, column=1).coordinate);
+                if sheet.cell(row=i, column=2).value == name :
+                        #lista.append(sheet.cell(row=i, column=1).coordinate);
+                        lista.append(sheet.cell(row=i, column=2).coordinate);
                         n=n+1;
         if lista == []:
                 print ("No se encontraron similitudes")
@@ -97,15 +99,17 @@ def find_and_list(wb,lista):
 
 
     
-def show_test (wb,lista_pos,lista_fila): #muestra el primer elemento de la lista con sus detalles
-        sheet = wb.get_sheet_by_name('Hoja1')
+def show_test (wb,lista_pos): #muestra el primer elemento de la lista con sus detalles
+        sheet = wb.get_sheet_by_name('Sheet1')
+        #Psiciones fila/columna
+        c=sheet[lista_pos[0]]
         if (lista_pos==[]):
                 print("No hay elementos cargados o ya ha finalizado su trabajo ;)")
         else:
-                for i in range(1,sheet.max_column):
-                        print("%s: %s",sheet.cell(row=1, column=i).value, sheet.cell(row=lista_fila[0], column=i).value)
-                        if(sheet.cell(row(row=1, column=i).value=="Autocase")):
-                                pyperclip.copy(sheet.cell(row=lista_fila[0], column=i).value)
+                for i in range(1,sheet.max_column+1):
+                        print(sheet.cell(row=1, column=i).value,sheet.cell(row=c.row,column=i).value)
+                        if(sheet.cell(row=1, column=i).value=="Autocase"):
+                                pyperclip.copy(sheet.cell(row=c.row,column=i).value)
                 print("###########################")
         return 0
     
@@ -128,7 +132,7 @@ def main():
         menu['1']="Almacenar rango de trabajo" 
         menu['2']="Obtener info de un testcase"
         menu['3']="Crear valores aleatorios en hexadecimal"
-        menu['4']="(Postsimulacion) Calcular y graficar error"
+        menu['4']="Limpiar listas"
         menu['5']="Exit"
         while a:
                 options=menu.keys()
@@ -140,16 +144,25 @@ def main():
                         print entry, menu[entry]
                 selection=raw_input("Please Select:")
                 if selection =='1':
-                        oper,typ=config(oper,typ);
+                        #oper,typ=config(oper,typ);
+                        lista_pos = find_and_list(wb,lista_pos)
+                        print(lista_pos)
                         print
                 elif selection == '2':
+                        show_test(wb,lista_pos)
                 #lista.append(oper)
                 #pyperclip.copy("ola k ase")
                         print
+                elif selection == '4':
+                        lista_pos=[];
+                        lista_fila=[];
+                        lista_col=[];
                 elif selection == '5':
                         save(lista_pos,lista_fila,lista_col)
                         break
                 print
-        wb.close();
+                os.system('CLS')
+        #wb.close();
+        wb.save('exampleW.xlsx')
 main();
 
